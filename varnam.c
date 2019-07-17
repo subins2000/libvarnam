@@ -209,6 +209,7 @@ varnam_get_suggestions_file (varnam *handle)
 }
 
 static const char* symbolsFileSearchPath[] = {
+    "/app/share/varnam/vst",
     "/usr/local/share/varnam/vst",
     "/usr/share/varnam/vst",
     "schemes"
