@@ -209,7 +209,6 @@ varnam_get_suggestions_file (varnam *handle)
 }
 
 static const char* symbolsFileSearchPath[] = {
-    "/app/share/varnam/vst",
     "/usr/local/share/varnam/vst",
     "/usr/share/varnam/vst",
     "schemes"
@@ -224,9 +223,15 @@ find_symbols_file_directory()
     return strbuf_to_s(varnam_symbols_dir);
   }
 
-  for (i = 0; i < ARRAY_SIZE (symbolsFileSearchPath); i++) {
-    if (is_directory (symbolsFileSearchPath[i]))
-      return symbolsFileSearchPath[i];
+  char *env_symbols_dir = getenv("VARNAM_SYMBOLS_DIR");
+
+  if (env_symbols_dir != NULL) {
+    return env_symbols_dir;
+  } else {
+    for (i = 0; i < ARRAY_SIZE (symbolsFileSearchPath); i++) {
+      if (is_directory (symbolsFileSearchPath[i]))
+        return symbolsFileSearchPath[i];
+    }
   }
 
   return NULL;
