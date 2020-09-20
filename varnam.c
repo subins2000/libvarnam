@@ -223,9 +223,15 @@ find_symbols_file_directory()
     return strbuf_to_s(varnam_symbols_dir);
   }
 
-  for (i = 0; i < ARRAY_SIZE (symbolsFileSearchPath); i++) {
-    if (is_directory (symbolsFileSearchPath[i]))
-      return symbolsFileSearchPath[i];
+  char *env_symbols_dir = getenv("VARNAM_SYMBOLS_DIR");
+
+  if (env_symbols_dir != NULL) {
+    return env_symbols_dir;
+  } else {
+    for (i = 0; i < ARRAY_SIZE (symbolsFileSearchPath); i++) {
+      if (is_directory (symbolsFileSearchPath[i]))
+        return symbolsFileSearchPath[i];
+    }
   }
 
   return NULL;
@@ -288,15 +294,21 @@ find_learnings_file_path (const char *langCode)
     }
   }
 #else
-  tmp = getenv ("XDG_DATA_HOME");
+  tmp = getenv ("VARNAM_SUGGESTIONS_DIR");
   if (tmp == NULL) {
-    tmp = getenv ("HOME");
-    if (tmp != NULL) {
-      strbuf_addf (path, "%s/.local/share/varnam/suggestions/", tmp);
-    }
+      tmp = getenv ("XDG_DATA_HOME");
+      if (tmp == NULL) {
+        tmp = getenv ("HOME");
+        if (tmp != NULL) {
+          strbuf_addf (path, "%s/.local/share/varnam/suggestions/", tmp);
+        }
+      }
+      else {
+        strbuf_addf (path, "%s/varnam/suggestions/", tmp);
+      }
   }
   else {
-    strbuf_addf (path, "%s/varnam/suggestions/", tmp);
+    strbuf_addf (path, "%s/", tmp);
   }
 
   if (!strbuf_is_blank (path)) {
