@@ -215,7 +215,7 @@ ENDIF()
 
 # argp doesn't by default exist for windows
 # TODO make varnamc work on windows too
-IF(!MSVC)
+IF(NOT DEFINED MSVC)
   FILE(GLOB_RECURSE SOURCES varnamc.c)
   ADD_EXECUTABLE(${VARNAM_BINARY_NAME} ${SOURCES})
   target_link_libraries(${VARNAM_BINARY_NAME} ${VARNAM_LIBRARY_NAME})
